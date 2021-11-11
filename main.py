@@ -7,6 +7,7 @@ def create_window():
     win = w.MyWindow()
 
     win.show()
+    win.new_array()
     sys.exit(app.exec_())
 
 create_window()
