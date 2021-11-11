@@ -22,6 +22,9 @@ START = 100
 class MyWindow(QMainWindow):
     def __init__(self):
         super(MyWindow, self).__init__()
+        self.init_ui()
+
+    def init_ui(self):
         self.setGeometry(X_POS, Y_POS, WIDTH, HEIGHT)
 
         self.scene = QGraphicsScene(self)
