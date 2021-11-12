@@ -22,6 +22,10 @@ START = 100
 class MyWindow(QMainWindow):
     def __init__(self):
         super(MyWindow, self).__init__()
+
+        self.lines = {}
+        self.arr_to_sort = []
+
         self.init_ui()
 
     def init_ui(self):
@@ -36,12 +40,13 @@ class MyWindow(QMainWindow):
 
         self.sort_methods = QtWidgets.QComboBox(self)
         self.sort_methods.setGeometry(20, 40, 100, 30)
-        methods = ['Bubble Sort', 'Merge Sort', 'Quick Sort']
+        methods = ['Bubble Sort', 'Quick Sort', 'Merge Sort']
         self.sort_methods.insertItems(0, methods)
 
         self.visualize_button = QtWidgets.QPushButton(self)
         self.visualize_button.setGeometry(20, 90, 100, 30)
         self.visualize_button.setText('Visualize')
+        self.visualize_button.clicked.connect(self.sort_array)
 
         self.animation_speed = QtWidgets.QSlider(Qt.Horizontal, self)
         self.animation_speed.setGeometry(20, 160, 100, 20)
@@ -55,6 +60,16 @@ class MyWindow(QMainWindow):
         self.new_array_button.setText('New Array')
 
 
+    def sort_array(self):
+        sort_method = self.sort_methods.currentText()
+        if sort_method == 'Bubble Sort':
+            self.bubble_sort()
+        elif sort_method == 'Quick Sort':
+            self.merge_sort()
+        else:
+            self.quick_sort()
+
+
     def create_array(self):
         return random.sample(range(2, 350), 60)
 
@@ -64,10 +79,19 @@ class MyWindow(QMainWindow):
         arr = self.create_array()
         start = START
         for length in arr:
-            self.scene.addLine(start, VIEW_H, start, VIEW_H-length, pen)
+            line = self.scene.addLine(start, VIEW_H, start, VIEW_H-length, pen)
+            self.lines[length] = line
+            self.arr_to_sort.append(length)
             start += STEP
 
+    def bubble_sort(self):
+        pass
 
+    def merge_sort(self):
+        pass
+
+    def quick_sort(self):
+        pass
         
 
 
