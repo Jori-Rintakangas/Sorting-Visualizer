@@ -2,10 +2,11 @@ from PyQt5 import QtWidgets
 import PyQt5
 from PyQt5 import QtGui
 from PyQt5.QtGui import QPen
-from PyQt5.QtWidgets import QMainWindow
+from PyQt5.QtWidgets import QGraphicsLineItem, QMainWindow
 from PyQt5.QtWidgets import QGraphicsView, QGraphicsScene
 from PyQt5.QtCore import Qt
 import random
+
 
 X_POS = 900
 Y_POS = 500
@@ -79,19 +80,43 @@ class MyWindow(QMainWindow):
         arr = self.create_array()
         start = START
         for length in arr:
-            line = self.scene.addLine(start, VIEW_H, start, VIEW_H-length, pen)
+            line = self.scene.addLine(0, 0, 0, length, pen)
+            line.moveBy(start, VIEW_H-length)
             self.lines[length] = line
             self.arr_to_sort.append(length)
             start += STEP
 
     def bubble_sort(self):
-        pass
+        for i in range(1, len(self.arr_to_sort)):
+
+            for j in range(0, len(self.arr_to_sort)-i):
+                first = self.arr_to_sort[j]
+                second = self.arr_to_sort[j+1]
+                           
+                if first > second:
+                    self.arr_to_sort[j] = second
+                    self.arr_to_sort[j+1] = first
+                    self.swap_lines(first, second)
+        
 
     def merge_sort(self):
         pass
 
     def quick_sort(self):
         pass
+
+    def swap_lines(self, first, second):
+        x_1 = self.lines[first].x()
+        x_2 = self.lines[second].x()
+        diff = x_2 - x_1
+
+        self.lines[first].moveBy(diff, 0)
+        self.lines[second].moveBy(-diff, 0)
+
+
+
+
+        
         
 
 
