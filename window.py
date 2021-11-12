@@ -4,7 +4,7 @@ from PyQt5 import QtGui
 from PyQt5.QtGui import QPen
 from PyQt5.QtWidgets import QGraphicsLineItem, QMainWindow
 from PyQt5.QtWidgets import QGraphicsView, QGraphicsScene
-from PyQt5.QtCore import Qt, QTime, QEventLoop, QCoreApplication
+from PyQt5.QtCore import Qt, QTime, QEventLoop, QCoreApplication, left, right
 import random
 import time
 
@@ -69,7 +69,8 @@ class MyWindow(QMainWindow):
             end = len(self.arr_to_sort) - 1
             self.quick_sort(self.arr_to_sort, 0, end)
         else:
-            self.merge_sort()
+            self.arr_to_sort = self.merge_sort(self.arr_to_sort)
+            print(self.arr_to_sort)
 
     def delay(self):
         die_time = QTime.currentTime().addMSecs(500)
@@ -77,7 +78,7 @@ class MyWindow(QMainWindow):
             QCoreApplication.processEvents(QEventLoop.AllEvents, 100)
 
     def create_array(self):
-        return random.sample(range(2, 350), 60)
+        return random.sample(range(2, 350), 10)
 
     def new_array(self):
         pen = QPen(QtGui.QColor(0,0,0))
@@ -106,7 +107,6 @@ class MyWindow(QMainWindow):
         
 
     def quick_sort(self, arr, start, end):
-
         if start < end:
             # Partition
             partition_ind = start
@@ -134,14 +134,37 @@ class MyWindow(QMainWindow):
             self.quick_sort(arr, partition_ind + 1, end)
             
 
+    def merge_sort(self, arr):
+        if len(arr) == 1:
+            return arr
 
+        length = len(arr)
+        left = arr[0:length//2]
+        right = arr[length//2:length]
 
+        left = self.merge_sort(left)
+        right = self.merge_sort(right)
 
+        return self.merge(left, right)
 
+    def merge(self, left, right):
+        combined = []
 
+        while len(left) > 0 and len(right) > 0:
+            if left[0] < right[0]:
+                combined.append(left[0])
+                left.pop(0)
+            else:
+                combined.append(right[0])
+                right.pop(0)
+        
+        if len(left) == 0:
+            combined.extend(right)
+        else:
+            combined.extend(left)
 
-    def merge_sort(self):
-        pass
+        return combined
+
 
     def swap_lines(self, first, second):
         x_1 = self.lines[first].x()
