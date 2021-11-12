@@ -66,9 +66,10 @@ class MyWindow(QMainWindow):
         if sort_method == 'Bubble Sort':
             self.bubble_sort()
         elif sort_method == 'Quick Sort':
-            self.merge_sort()
+            end = len(self.arr_to_sort) - 1
+            self.quick_sort(self.arr_to_sort, 0, end)
         else:
-            self.quick_sort()
+            self.merge_sort()
 
 
     def create_array(self):
@@ -92,17 +93,47 @@ class MyWindow(QMainWindow):
             for j in range(0, len(self.arr_to_sort)-i):
                 first = self.arr_to_sort[j]
                 second = self.arr_to_sort[j+1]
-                           
+
                 if first > second:
                     self.arr_to_sort[j] = second
                     self.arr_to_sort[j+1] = first
                     self.swap_lines(first, second)
         
 
-    def merge_sort(self):
-        pass
+    def quick_sort(self, arr, start, end):
 
-    def quick_sort(self):
+        if start < end:
+            # Partition
+            partition_ind = start
+            pivot = self.arr_to_sort[end]
+            for i in range(start, end):
+                
+                element = self.arr_to_sort[i]
+                if element <= pivot:
+                    if partition_ind != i:
+                        self.swap_lines(self.arr_to_sort[partition_ind], self.arr_to_sort[i])
+
+                    self.arr_to_sort[i] = self.arr_to_sort[partition_ind]
+                    self.arr_to_sort[partition_ind] = element
+                    partition_ind += 1
+
+            self.swap_lines(self.arr_to_sort[partition_ind], self.arr_to_sort[end])
+
+            self.arr_to_sort[end] = self.arr_to_sort[partition_ind]
+            self.arr_to_sort[partition_ind] = pivot
+            
+
+            self.quick_sort(arr, start, partition_ind - 1)
+            self.quick_sort(arr, partition_ind + 1, end)
+            
+
+
+
+
+
+
+
+    def merge_sort(self):
         pass
 
     def swap_lines(self, first, second):
