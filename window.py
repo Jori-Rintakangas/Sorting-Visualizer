@@ -26,7 +26,7 @@ class MyWindow(QMainWindow):
 
         self.lines = {}
         self.arr_to_sort = []
-
+        self.speed = 20
         self.init_ui()
 
     def init_ui(self):
@@ -51,6 +51,10 @@ class MyWindow(QMainWindow):
 
         self.animation_speed = QtWidgets.QSlider(Qt.Horizontal, self)
         self.animation_speed.setGeometry(20, 160, 100, 20)
+        self.animation_speed.setInvertedAppearance(True)
+        self.animation_speed.setRange(1, 400)
+        self.animation_speed.setValue(40)
+        self.animation_speed.valueChanged.connect(self.change_speed)
 
         self.text_label = QtWidgets.QLabel(self)
         self.text_label.setText('Animation Speed')
@@ -72,13 +76,16 @@ class MyWindow(QMainWindow):
             self.arr_to_sort = self.merge_sort(self.arr_to_sort)
             print(self.arr_to_sort)
 
+    def change_speed(self):
+        self.speed = self.animation_speed.value()
+
     def delay(self):
-        die_time = QTime.currentTime().addMSecs(500)
+        die_time = QTime.currentTime().addMSecs(self.speed)
         while QTime.currentTime() < die_time:
             QCoreApplication.processEvents(QEventLoop.AllEvents, 100)
 
     def create_array(self):
-        return random.sample(range(2, 350), 10)
+        return random.sample(range(2, 350), 60)
 
     def new_array(self):
         pen = QPen(QtGui.QColor(0,0,0))
