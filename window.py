@@ -4,9 +4,9 @@ from PyQt5 import QtGui
 from PyQt5.QtGui import QPen
 from PyQt5.QtWidgets import QGraphicsLineItem, QMainWindow
 from PyQt5.QtWidgets import QGraphicsView, QGraphicsScene
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QTime, QEventLoop, QCoreApplication
 import random
-
+import time
 
 X_POS = 900
 Y_POS = 500
@@ -71,6 +71,10 @@ class MyWindow(QMainWindow):
         else:
             self.merge_sort()
 
+    def delay(self):
+        die_time = QTime.currentTime().addMSecs(500)
+        while QTime.currentTime() < die_time:
+            QCoreApplication.processEvents(QEventLoop.AllEvents, 100)
 
     def create_array(self):
         return random.sample(range(2, 350), 60)
@@ -97,6 +101,7 @@ class MyWindow(QMainWindow):
                 if first > second:
                     self.arr_to_sort[j] = second
                     self.arr_to_sort[j+1] = first
+                    self.delay()
                     self.swap_lines(first, second)
         
 
@@ -111,12 +116,14 @@ class MyWindow(QMainWindow):
                 element = self.arr_to_sort[i]
                 if element <= pivot:
                     if partition_ind != i:
+                        self.delay()
                         self.swap_lines(self.arr_to_sort[partition_ind], self.arr_to_sort[i])
 
                     self.arr_to_sort[i] = self.arr_to_sort[partition_ind]
                     self.arr_to_sort[partition_ind] = element
                     partition_ind += 1
 
+            self.delay()
             self.swap_lines(self.arr_to_sort[partition_ind], self.arr_to_sort[end])
 
             self.arr_to_sort[end] = self.arr_to_sort[partition_ind]
