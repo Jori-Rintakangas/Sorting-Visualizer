@@ -66,9 +66,12 @@ class MyWindow(QMainWindow):
         self.new_array_button = QtWidgets.QPushButton(self)
         self.new_array_button.setGeometry(20, 250, 100, 30)
         self.new_array_button.setText('New Array')
+        self.new_array_button.clicked.connect(self.new_array)
 
 
     def sort_array(self):
+        self.visualize_button.setEnabled(False)
+        self.new_array_button.setEnabled(False)
         sort_method = self.sort_methods.currentText()
         if sort_method == 'Bubble Sort':
             self.bubble_sort()
@@ -78,6 +81,8 @@ class MyWindow(QMainWindow):
         else:
             self.arr_to_sort = self.merge_sort(self.arr_to_sort)
             print(self.arr_to_sort)
+        self.visualize_button.setEnabled(True)
+        self.new_array_button.setEnabled(True)
 
     def change_speed(self):
         self.speed = self.animation_speed.value()
@@ -91,6 +96,11 @@ class MyWindow(QMainWindow):
         return random.sample(range(2, 350), 60)
 
     def new_array(self):
+        self.scene.clear()
+        self.lines.clear()
+        self.arr_to_sort.clear()
+        self.visualize_button.setEnabled(False)
+        self.new_array_button.setEnabled(False)
         pen = QPen(QtGui.QColor(0,0,0))
         pen.setWidth(4)
         arr = self.create_array()
@@ -101,6 +111,8 @@ class MyWindow(QMainWindow):
             self.lines[length] = line
             self.arr_to_sort.append(length)
             start += STEP
+        self.visualize_button.setEnabled(True)
+        self.new_array_button.setEnabled(True)
 
     def bubble_sort(self):
         for i in range(1, len(self.arr_to_sort)):
@@ -138,11 +150,9 @@ class MyWindow(QMainWindow):
 
             self.arr_to_sort[end] = self.arr_to_sort[partition_ind]
             self.arr_to_sort[partition_ind] = pivot
-            
 
             self.quick_sort(arr, start, partition_ind - 1)
             self.quick_sort(arr, partition_ind + 1, end)
-            
 
     def merge_sort(self, arr):
         if len(arr) == 1:
@@ -174,7 +184,6 @@ class MyWindow(QMainWindow):
             combined.extend(left)
 
         return combined
-
 
     def swap_lines(self, first, second):
         x_1 = self.lines[first].x()
