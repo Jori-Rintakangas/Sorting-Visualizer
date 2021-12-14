@@ -1,12 +1,9 @@
 from PyQt5 import QtWidgets
-import PyQt5
 from PyQt5 import QtGui
 from PyQt5.QtGui import QPen
-from PyQt5.QtWidgets import QGraphicsLineItem, QMainWindow
-from PyQt5.QtWidgets import QGraphicsView, QGraphicsScene
-from PyQt5.QtCore import Qt, QTime, QEventLoop, QCoreApplication, left, right
+from PyQt5.QtWidgets import QMainWindow, QGraphicsView, QGraphicsScene
+from PyQt5.QtCore import Qt, QTimer, QEventLoop
 import random
-import time
 
 X_POS = 900
 Y_POS = 500
@@ -52,7 +49,7 @@ class MyWindow(QMainWindow):
         self.animation_speed = QtWidgets.QSlider(Qt.Horizontal, self)
         self.animation_speed.setGeometry(20, 160, 100, 20)
         self.animation_speed.setInvertedAppearance(True)
-        self.animation_speed.setRange(1, 400)
+        self.animation_speed.setRange(1, 200)
         self.animation_speed.setValue(40)
         self.animation_speed.valueChanged.connect(self.change_speed)
 
@@ -80,9 +77,9 @@ class MyWindow(QMainWindow):
         self.speed = self.animation_speed.value()
 
     def delay(self):
-        die_time = QTime.currentTime().addMSecs(self.speed)
-        while QTime.currentTime() < die_time:
-            QCoreApplication.processEvents(QEventLoop.AllEvents, 100)
+        self.delay_loop = QEventLoop()
+        QTimer.singleShot(self.speed, self.delay_loop.quit)
+        self.delay_loop.exec_()
 
     def create_array(self):
         return random.sample(range(2, 350), 60)
@@ -180,14 +177,3 @@ class MyWindow(QMainWindow):
 
         self.lines[first].moveBy(diff, 0)
         self.lines[second].moveBy(-diff, 0)
-
-
-
-
-        
-        
-
-
-
-
-
