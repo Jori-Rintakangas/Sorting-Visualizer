@@ -4,6 +4,7 @@ from PyQt5.QtGui import QPen
 from PyQt5.QtWidgets import QMainWindow, QGraphicsView, QGraphicsScene
 from PyQt5.QtCore import Qt, QTimer, QEventLoop
 import random
+import sys
 
 X_POS = 900
 Y_POS = 500
@@ -24,7 +25,12 @@ class MyWindow(QMainWindow):
         self.lines = {}
         self.arr_to_sort = []
         self.speed = 20
+        self.delay_loop = QEventLoop()
         self.init_ui()
+
+    def closeEvent(self, event):
+        event.accept()
+        sys.exit(self.delay_loop.exit())
 
     def init_ui(self):
         self.setGeometry(X_POS, Y_POS, WIDTH, HEIGHT)
