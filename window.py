@@ -17,6 +17,7 @@ TOP_MARGIN = 40
 
 STEP = 10
 START = 100
+ARRAY_LENGTH = 64
 
 class MyWindow(QMainWindow):
     def __init__(self):
@@ -25,7 +26,14 @@ class MyWindow(QMainWindow):
         self.lines = {}
         self.arr_to_sort = []
         self.speed = 20
+        self.count = 0
+        self.count2 = 0
+        self.count3 = 0
+        self.count4 = 0
+        self.position = START
         self.delay_loop = QEventLoop()
+        self.red_pen = QPen(QtGui.QColor(255, 0, 0))
+        self.black_pen = QPen(QtGui.QColor(0, 0, 0))
         self.init_ui()
 
     def closeEvent(self, event):
@@ -68,7 +76,6 @@ class MyWindow(QMainWindow):
         self.new_array_button.setText('New Array')
         self.new_array_button.clicked.connect(self.new_array)
 
-
     def sort_array(self):
         self.visualize_button.setEnabled(False)
         self.new_array_button.setEnabled(False)
@@ -78,10 +85,8 @@ class MyWindow(QMainWindow):
         elif sort_method == 'Quick Sort':
             end = len(self.arr_to_sort) - 1
             self.quick_sort(self.arr_to_sort, 0, end)
-        else:
-            self.arr_to_sort = self.merge_sort(self.arr_to_sort)
-            print(self.arr_to_sort)
-        self.visualize_button.setEnabled(True)
+        elif sort_method == 'Merge Sort':
+            self.merge_sort(self.arr_to_sort)
         self.new_array_button.setEnabled(True)
 
     def change_speed(self):
@@ -93,15 +98,13 @@ class MyWindow(QMainWindow):
         self.delay_loop.exec_()
 
     def create_array(self):
-        return random.sample(range(2, 350), 60)
+        return random.sample(range(2, 350), ARRAY_LENGTH)
 
     def new_array(self):
-        self.scene.clear()
-        self.lines.clear()
-        self.arr_to_sort.clear()
+        self.reset()
         self.visualize_button.setEnabled(False)
         self.new_array_button.setEnabled(False)
-        pen = QPen(QtGui.QColor(0,0,0))
+        pen = self.black_pen
         pen.setWidth(4)
         arr = self.create_array()
         start = START
@@ -113,6 +116,16 @@ class MyWindow(QMainWindow):
             start += STEP
         self.visualize_button.setEnabled(True)
         self.new_array_button.setEnabled(True)
+
+    def reset(self):
+        self.count = 0
+        self.count2 = 0
+        self.count3 = 0
+        self.count4 = 0
+        self.position = START
+        self.scene.clear()
+        self.lines.clear()
+        self.arr_to_sort.clear()
 
     def bubble_sort(self):
         for i in range(1, len(self.arr_to_sort)):
@@ -126,7 +139,6 @@ class MyWindow(QMainWindow):
                     self.arr_to_sort[j+1] = first
                     self.delay()
                     self.swap_lines(first, second)
-        
 
     def quick_sort(self, arr, start, end):
         if start < end:
@@ -177,12 +189,15 @@ class MyWindow(QMainWindow):
             else:
                 combined.append(right[0])
                 right.pop(0)
-        
+
         if len(left) == 0:
             combined.extend(right)
         else:
             combined.extend(left)
 
+        self.delay()
+        self.sort_lines(combined)
+        self.delay()
         return combined
 
     def swap_lines(self, first, second):
@@ -192,3 +207,28 @@ class MyWindow(QMainWindow):
 
         self.lines[first].moveBy(diff, 0)
         self.lines[second].moveBy(-diff, 0)
+
+    def sort_lines(self, lines):
+        self.delay()
+        if len(lines) == ARRAY_LENGTH / 16:
+            self.position = START + self.count * STEP
+            self.count += ARRAY_LENGTH / 16
+
+        elif len(lines) == ARRAY_LENGTH / 8:
+            self.position = START + self.count2 * STEP
+            self.count2 += ARRAY_LENGTH / 8
+
+        elif len(lines) == ARRAY_LENGTH / 4:
+            self.position = START + self.count3 * STEP
+            self.count3 += ARRAY_LENGTH / 4
+
+        elif len(lines) == ARRAY_LENGTH / 2:
+            self.position = START + self.count4 * STEP
+            self.count4 += ARRAY_LENGTH / 2
+
+        elif len(lines) == ARRAY_LENGTH:
+            self.position = START
+        self.delay()
+        for line in lines:
+            self.lines[line].setPos(self.position, VIEW_H - line)
+            self.position += STEP
