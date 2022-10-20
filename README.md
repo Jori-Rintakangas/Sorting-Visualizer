@@ -1,12 +1,9 @@
 # Sorting Visualizer
-
-## About
-A program to visualize how different sorting methods work.
+Visualizer for sorting algorithms.
 
 ## Illustration
-User interface of the program.
 
-![image](UI.PNG)
+![gif](sort.gif)
 
 ## Technologies
 
